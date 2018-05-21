@@ -1,9 +1,8 @@
 """
-Project Name - First Reddit Bot
-Description  - Attempting Side project for 2a coop term LOOOL
+Project Name - StayInTheLoop
+Description  - Scrape /r/outoftheloop, and use selenium with google trends to scrape most frequently searched posts contents
 Author       - Bilaal Hussain
-Date         - 5/19/2018
-Time         - 3:20 PM
+Date         - 5/15/2018
 """
 
 import praw
