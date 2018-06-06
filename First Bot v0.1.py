@@ -45,18 +45,52 @@ def filter_common_words(text):
     return sorted(uncommon)
 	
 	
-
+"""
 for post in subreddit.hot(limit=1):
 	post_titles.append(post.title)
 	for tokenized in post_titles:
 		print(filter_common_words(tokenized))
-	
+	"""
+while (True):
+	for post in content:
+		# if it is a question, store the title and score
+		if post.id not in post_ids:
+			#debugging
+			print '\nQuestion: ', post.title
+			print 'Score: ', post.score
+			post_ids.append(post.id)
+			post_titles.append(post.title)
 
+			
+			post_comments = post.comments
+			top_comment = ''
+			
+			for comment in post_comments:
+				comment_text = post_comment.body
+				comment_score = post_comment.score
+				#TODO: Fix janky way of finding highest score. Look for API call that finds top post score
+				if (comment_score > top_score):
+					top_comment = comment_text
+					top_score = comment.score
+
+			# append the top comment to the answers list
+			answers.append(top_comment)
+			current_iterations += 1
+
+			# print the status
+			print "Iterations: ", current_iterations,
+			time.sleep(delay_slot)
+			
+			if (current_iterations >= max_iterations):
+				break
+
+	# reached if max_iterations is met or no more content
+	break
 
 
 	
 #
-  #  print("Title: ", submission.title)
-  #  print("Text: ", submission.selftext)
-  #  print("Score: ", submission.score)
+  #  print("Title: ", post.title)
+  #  print("Text: ", post.selftext)
+  #  print("Score: ", post.score)
   #  print("----------------------------\n")
