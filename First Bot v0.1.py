@@ -72,15 +72,15 @@ while (True):
 				if (comment_score > top_score):
 					top_comment = comment_text
 					top_score = comment.score
-
-			# append the top comment to the answers list
-			answers.append(top_comment)
+			post_responses.append(top_comment) 			# TODO: Process posts for better responses
 			current_iterations += 1
 
 			# print the status
 			print "Iterations: ", current_iterations,
 			time.sleep(delay_slot)
 			
+			reddit.redditor('the_undoxxed').message(top_comment, post.title) 	#TODO: Create ALF for this function mapping functions to post/comment pairs
+																				#TODO: Create mailing list
 			if (current_iterations >= max_iterations):
 				break
 
