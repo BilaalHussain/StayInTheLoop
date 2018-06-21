@@ -7,12 +7,17 @@ Date         - 5/15/2018
 
 import praw
 import nltk
+import re
 from nltk.corpus import stopwords
-	
+import time
+from selenium import webdriver
 reddit = praw.Reddit('bot1', user_agent='First Bot v0.1')
 subreddit = reddit.subreddit("outoftheloop")
-
+chrome_path = "P:\Development\Python\First Reddit Bot\StayInTheLoop\chromedriver.exe"
+google_trends = "https://trends.google.com/trends/?geo=US"
+#content = reddit.get_content()
 #Data storage
+
 post_ids = []
 post_titles = []
 post_responses = []
@@ -20,7 +25,7 @@ post_responses = []
 
 #Query limit
 limit = 5
-
+sleep_time = 300
 
 
 current_iterations = 0
@@ -43,25 +48,40 @@ def filter_common_words(text):
     common_vocab = set(w.lower() for w in nltk.corpus.stopwords.words('english'))
     uncommon = text_vocab - common_vocab
     return sorted(uncommon)
+
+def test_significance(words):
+	driver = webdriver.Chrome(chrome_path)
+	driver.get(google_trends)
+	element = driver.find_element_by_xpath('/html/body/div[2]/div[2]/div/ng-include/div/div[2]/div/div')
+	for word in words:
+		element.send_keys(word + " ")
+		driver.find_element_by_xpath('/html/body/div[2]/div[2]/div/md-content/div/div/div[1]/trends-widget/ng-include/widget/div/div/div/widget-actions/div/button[1]/i').click
+
 	
-	
-"""
-for post in subreddit.hot(limit=1):
-	post_titles.append(post.title)
-	for tokenized in post_titles:
-		print(filter_common_words(tokenized))
-	"""
-while (True):
-	for post in content:
+while(True):
+	for post in subreddit.hot(limit=5):
 		# if it is a question, store the title and score
+		if post.id not in post_ids:
+			#debugging
+			print( '\nQuestion: ', post.title)
+			#print( 'Score: ', post.score)
+			post_ids.append(post.id)
+			post_titles.append(post.title)
+			print(post_titles[-1])			
+			nouns = filter_common_words(post_titles[-1].split())
+			print(nouns)
+
+"""
+while (True):
+	for post in subreddit.hot(limit=5):
 		if post.id not in post_ids:
 			#debugging
 			print '\nQuestion: ', post.title
 			print 'Score: ', post.score
 			post_ids.append(post.id)
 			post_titles.append(post.title)
-
-			
+			nouns = filter_common_words(post_titles[-1].split())		
+		
 			post_comments = post.comments
 			top_comment = ''
 			
@@ -80,17 +100,10 @@ while (True):
 			time.sleep(delay_slot)
 			
 			reddit.redditor('the_undoxxed').message(top_comment, post.title) 	#TODO: Create ALF for this function mapping functions to post/comment pairs
-																				#TODO: Create mailing list
+																					#TODO: Create mailing list
 			if (current_iterations >= max_iterations):
 				break
-
+	time.sleep(sleep_time)
 	# reached if max_iterations is met or no more content
 	break
-
-
-	
-#
-  #  print("Title: ", post.title)
-  #  print("Text: ", post.selftext)
-  #  print("Score: ", post.score)
-  #  print("----------------------------\n")
+"""
